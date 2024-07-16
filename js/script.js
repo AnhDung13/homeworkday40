@@ -1,4 +1,7 @@
-import { params, getQuestion } from "../module/callApi.js";
+let point = 0;
+let totalCorrect = 0;
+
+import { getQuestion, params } from "../module/callApi.js";
 const inner = document.querySelector(".inner");
 const startBtn = document.querySelector("#start");
 startBtn.addEventListener("click", () => {
@@ -41,13 +44,18 @@ export const renderQuestion = (data, totalPages) => {
     .join("")}`;
 };
 
-export const addEventAnswer = (data) => {
+export const addEventAnswer = (data, totalPages) => {
   document.querySelector(".point-n-time").classList.remove("hidden");
-  const questionInner = document.querySelector(".question-inner");
-
+  const totalPointElement = document.querySelector(".point span");
+  const notifyElement = document.querySelector(".notify");
+  const totalCorrectElement = document.querySelector(".total-correct");
   let time = data[0].time_limit;
+  let correctAnswer = data[0].correct_id;
   const countDown = setInterval(() => {
-    document.querySelector(".time").innerHTML = `Thời gian: ${time--}`;
+    const timeElement = document.querySelector(".time");
+    if (timeElement) {
+      timeElement.innerHTML = `Thời gian: ${time--}`;
+    }
     if (time < 0) {
       clearInterval(countDown);
       params._page++;
@@ -55,31 +63,38 @@ export const addEventAnswer = (data) => {
     }
   }, 1000);
 
-  const notify = document.querySelector(".notify");
-
-  let correctAnswer = data[0].correct_id;
-  questionInner.addEventListener("click", (e) => {
-    if (Number(e.target.dataset.id) === correctAnswer) {
-      e.target.classList.add("bg-success", "text-white");
-      e.target.classList.remove("bg-danger");
-      params._page++;
-      notify.innerHTML = "Chính Xác!";
-      setTimeout(() => {
-        notify.innerHTML = "";
-        getQuestion(params);
-      }, 3000);
-      clearInterval(countDown);
-    } else {
-      e.target.classList.add("text-white", "bg-danger");
-      params._page++;
-      notify.innerHTML = "Sai!";
-      setTimeout(() => {
-        notify.innerHTML = "";
-        getQuestion(params);
-      }, 3000);
-      clearInterval(countDown);
-    }
+  const answers = document.querySelectorAll(".answer");
+  answers.forEach((answer) => {
+    answer.addEventListener("click", () => {
+      if (params._page <= totalPages) {
+        clearInterval(countDown);
+        if (+answer.dataset.id === correctAnswer) {
+          answer.classList.add("bg-success", "text-white");
+          notifyElement.innerHTML = "Chính Xác!";
+          totalPointElement.innerHTML = `${(point += data[0].point)}`;
+          totalCorrectElement.innerText = `${(totalCorrect += 1)}`;
+        } else {
+          answers.forEach((answer) => {
+            if (+answer.dataset.id === correctAnswer) {
+              answer.classList.add("bg-success", "text-white");
+            } else {
+              answer.classList.add("text-white", "bg-danger");
+            }
+          });
+          notifyElement.innerHTML = "Sai!";
+        }
+        setTimeout(() => {
+          params._page++;
+          notifyElement.innerHTML = "";
+          getQuestion(params);
+        }, 3000);
+      }
+    });
   });
 };
-
-export const countDown = (data) => {};
+export const finish = (totalPages) => {
+  const totalPoint = document.querySelector(".point span").innerText;
+  const totalCorrect = document.querySelector(".total-correct").innerText;
+  inner.innerHTML = `<div class="text-success text-center fs-3">Bạn đã trả lời đúng ${totalCorrect}/${totalPages} câu hỏi</div>
+                    <div class="text-success text-center fs-3">Số điểm của bạn là ${totalPoint}</div>`;
+};
