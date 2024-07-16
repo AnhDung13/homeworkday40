@@ -14,7 +14,7 @@ startBtn.addEventListener("click", () => {
       clearInterval(countdown);
       getQuestion(params);
     }
-  }, 200);
+  }, 1000);
 });
 
 export const renderQuestion = (data, totalPages) => {
