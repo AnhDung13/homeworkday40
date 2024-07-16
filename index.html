@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+    integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <style>
+    .hidden {
+      display: none !important;
+    }
+    .question-inner .answer:hover {
+      background: rgb(25, 135, 84);
+      color: white !important;
+    }
+  </style>
+  <body class="bg-black">
+    <div
+      class="container border border-success vh-100 d-flex justify-content-center align-items-center"
+    >
+      <div class="inner w-75 p-3">
+        <div class="outer text-center">
+          <h1 class="text-success mb-3">Quizz App</h1>
+          <button
+            type="button"
+            class="btn btn-success fs-3 px-5 py-2"
+            id="start"
+          >
+            Start
+          </button>
+        </div>
+        <div
+          class="point-n-time d-flex justify-content-between fs-3 text-success hidden"
+        >
+          <div class="time">Thời gian: 0</div>
+          <div class="point">Điểm 0</div>
+        </div>
+        <div
+          class="question-inner d-flex justify-content-center flex-wrap"
+        ></div>
+        <div class="notify text-success fs-3"></div>
+      </div>
+    </div>
+    <script type="module" src="./js/script.js"></script>
+  </body>
+</html>
